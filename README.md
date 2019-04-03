@@ -16,7 +16,7 @@ npm install
 
 The app expects a `config.json` file in the root of the project:
 
-```json
+```
 {
     "token": <Twilio token>,
     "sid": <Twilio number SID>,
