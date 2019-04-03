@@ -44,13 +44,13 @@ List your items on your to-do list.
 
 Clear the list.
 
-**+ <item>**
+**+** ***item***
 
-Add <item> to your list.
+Add ***item*** to your list.
 
-**- <item>**
+**-** ***item***
 
-Remove <item> from your list if it exists in your list.
+Remove ***item*** from your list if it exists in your list.
 
 ## Notifications
 
