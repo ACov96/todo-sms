@@ -37,15 +37,19 @@ npm start
 You can manage the to-do list by texting the following commands to your Twilio number (it is case-insensitive):
 
 **ls**
+
 List your items on your to-do list.
 
 **rm**
+
 Clear the list.
 
 **+ <item>**
+
 Add <item> to your list.
 
 **- <item>**
+
 Remove <item> from your list if it exists in your list.
 
 ## Notifications
