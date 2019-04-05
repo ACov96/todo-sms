@@ -11,7 +11,8 @@ const queue = new Set();
 const library = {
   'ls': () => {
     let items = Array.from(queue);
-    items = items.map((item) => `- ${item}`);
+    if (items.length === 0) return 'You have nothing left in the queue'
+    items = items.map((item, idx) => `${idx+1}. ${item}`);
     return `You have the following items left to do:\n${items.join('\n')}`;
   },
   'rm': () => {
@@ -25,8 +26,9 @@ const library = {
   },
   '-': (args) => {
     if (!args) return 'Nothing to remove';
-    queue.delete(args);
-    return `Removed ${args} from the queue.`;
+    items = Array.from(queue);
+    queue.delete(items[Number(args)-1]);
+    return `Removed ${items[Number(args)-1]} from the queue.`;
   },
 };
 
@@ -55,12 +57,12 @@ app.listen(config.port, () => console.log(`Listening on ${config.port}`));
 scheduler.scheduleJob('0 10,12,14,16,18,20,22 * * *', () => {
   let items = Array.from(queue);
   if (items.length) {
-    items = items.map(item => `- ${item}`);
+    items = items.map((item, idx) => `${idx+1}. ${item}`);
     const message = `You have the following items left:\n${items.join('\n')}`;
     messenger.messages.create({
       body: message,
       to: `+1${config.number}`,
       from: `+1${config.twilioNumber}`,
-    }).then(res.send()).done();
+    }).then(() => console.log('Sent scheduled SMS reminder')).done();
   }
 });
