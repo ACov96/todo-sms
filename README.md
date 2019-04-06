@@ -44,13 +44,13 @@ List your items on your to-do list.
 
 Clear the list.
 
-**+** ***item***
+**+** ***item[, item, ...]***
 
-Add ***item*** to your list.
+Add ***item*** to your list. You can add multiple items by separating values with a ','.
 
-**-** ***item***
+**-** ***itemNumber [, itemNumber, ...]***
 
-Remove ***item*** from your list if it exists in your list.
+Remove ***itemNumber*** from your list if it exists in your list. You can remove multiple items by separating values with a ','.
 
 ## Notifications
 
