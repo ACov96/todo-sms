@@ -21,17 +21,22 @@ const library = {
   },
   '+': (args) => {
     if (!args) return 'Nothing to add.';
-    queue.add(args);
+    args.split(',').forEach(arg => queue.add(arg.trim()));
     return `Added ${args} to the queue.`;
   },
   '-': (args) => {
     if (!args) return 'Nothing to remove';
     items = Array.from(queue);
-    queue.delete(items[Number(args)-1]);
-    return `Removed ${items[Number(args)-1]} from the queue.`;
+    const removed = [];
+    args.split(',').forEach((arg) => {
+      removed.push(items[Number(arg)-1]);
+      queue.delete(items[Number(arg)-1]);  
+    });
+    return `Removed ${removed.join(', ')} from the queue.`;
   },
 };
 
+// Setup HTTP server
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -54,7 +59,8 @@ app.post(`/todo/receive`, (req, res) => {
 
 app.listen(config.port, () => console.log(`Listening on ${config.port}`));
 
-scheduler.scheduleJob('0 10,12,14,16,18,20,22 * * *', () => {
+// Automatic text 
+scheduler.scheduleJob('0 10-22/2 * * *', () => {
   let items = Array.from(queue);
   if (items.length) {
     items = items.map((item, idx) => `${idx+1}. ${item}`);
@@ -66,3 +72,10 @@ scheduler.scheduleJob('0 10,12,14,16,18,20,22 * * *', () => {
     }).then(() => console.log('Sent scheduled SMS reminder')).done();
   }
 });
+
+// Load recurrent tasks
+if (config.recurrent) {
+  Object.keys(config.recurrent).forEach((task) => {
+    scheduler.scheduleJob(config.recurrent[task], () => queue.add(task));
+  });
+}
