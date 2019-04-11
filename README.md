@@ -22,9 +22,14 @@ The app expects a `config.json` file in the root of the project:
     "sid": <Twilio number SID>,
     "number": <Number to text reminders to>,
     "twilioNumber": <Number to send messages from>,
-    "port": <Port to serve on>
+    "port": <Port to serve on>,
+    "recurrent": {
+      <task>: <cron schedule>
+    }
 }
 ```
+
+`recurrent` is optional and can allow for recurring tasks to be automatically added. You just need to specifiy the name of the task `task` and the schedule using the standard crontab format.
 
 ## Usage
 
@@ -36,21 +41,27 @@ npm start
 
 You can manage the to-do list by texting the following commands to your Twilio number (it is case-insensitive):
 
-**ls**
+#### ls
 
 List your items on your to-do list.
 
-**rm**
+#### rm
 
 Clear the list.
 
-**+** ***item[, item, ...]***
+#### + item, item, ...
 
 Add ***item*** to your list. You can add multiple items by separating values with a ','.
 
-**-** ***itemNumber [, itemNumber, ...]***
+#### - itemNumber, itemNumber, ...
 
 Remove ***itemNumber*** from your list if it exists in your list. You can remove multiple items by separating values with a ','.
+
+#### snooze
+
+Delay the next notification by 1 cron cycle. This can compound.
+
+
 
 ## Notifications
 
