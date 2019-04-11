@@ -3,10 +3,17 @@ const bodyParser = require('body-parser');
 const twilio = require('twilio');
 const { MessagingResponse } = require('twilio').twiml;
 const scheduler = require('node-schedule');
+const fs = require('fs');
 const config = require('../config');
 
 const messenger = twilio(config.sid, config.token);
 const queue = new Set();
+let snooze = 0;
+
+if (fs.existsSync('./queue-backup.json')) {
+  const backup = fs.readFileSync('./queue-backup.json');
+  backup.forEach(item => queue.add(item));
+}
 
 const library = {
   'ls': () => {
@@ -34,6 +41,10 @@ const library = {
     });
     return `Removed ${removed.join(', ')} from the queue.`;
   },
+  'snooze': () => {
+    snooze++;
+    return `Current snooze value: ${snooze}`;
+  }
 };
 
 // Setup HTTP server
@@ -61,6 +72,10 @@ app.listen(config.port, () => console.log(`Listening on ${config.port}`));
 
 // Automatic text 
 scheduler.scheduleJob('0 10-22/2 * * *', () => {
+  if (snooze > 0) {
+    snooze--;
+    return;
+  }
   let items = Array.from(queue);
   if (items.length) {
     items = items.map((item, idx) => `${idx+1}. ${item}`);
@@ -79,3 +94,8 @@ if (config.recurrent) {
     scheduler.scheduleJob(config.recurrent[task], () => queue.add(task));
   });
 }
+
+// Save in-memory list to disk in case of restart
+setInterval(() => {
+  fs.writeFileSync('./queue-backup.json', JSON.stringify(Array.from(queue)));
+}, 60000);
