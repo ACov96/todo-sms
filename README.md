@@ -20,16 +20,20 @@ The app expects a `config.json` file in the root of the project:
 {
     "token": <Twilio token>,
     "sid": <Twilio number SID>,
-    "number": <Number to text reminders to>,
     "twilioNumber": <Number to send messages from>,
     "port": <Port to serve on>,
-    "recurrent": {
-      <task>: <cron schedule>
-    }
+    "numbers": [
+      {
+        "number": <number to send messages to>,
+        "recurrent": {
+          <task>: <cron schedule>
+        }
+      }
+    ]
 }
 ```
 
-`recurrent` is optional and can allow for recurring tasks to be automatically added. You just need to specifiy the name of the task `task` and the schedule using the standard crontab format.
+`numbers` is an array of objects that contain information about the different numbers you want to allow access to the app. `number` is the number to text, `recurrent` is optional and can allow for recurring tasks to be automatically added. You just need to specifiy the name of the task `task` and the schedule using the standard crontab format.
 
 ## Usage
 
