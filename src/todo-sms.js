@@ -15,13 +15,18 @@ config.numbers.forEach((num) => {
     list: new Set(),
   };
 });
-console.log(queue);
 let snooze = 0;
 
-// if (fs.existsSync('./queue-backup.json')) {
-//   const backup = fs.readFileSync('./queue-backup.json', 'utf8');
-//   queue = JSON.parse(backup);
-// }
+if (fs.existsSync('./queue-backup.json')) {
+  const backup = fs.readFileSync('./queue-backup.json', 'utf8');
+  const backupObj = JSON.parse(backup);
+  queue = {};
+  Object.keys(backupObj).forEach((num) => {
+    queue[num] = {};
+    queue[num].number = num;
+    queue[num].list = new Set(backupObj[num].list);
+  });
+}
 
 const library = {
   'ls': (_, num) => {
@@ -117,5 +122,12 @@ config.numbers.forEach((num) => {
 
 // Save in-memory list to disk in case of restart
 setInterval(() => {
-  fs.writeFileSync('./queue-backup.json', JSON.stringify(queue));
-}, 60000);
+  const jsonQueue = {};
+  Object.keys(queue).forEach((num) => {
+    const obj = {}
+    obj.number = num;
+    obj.list = Array.from(queue[num].list);
+    jsonQueue[num] = obj;
+  });
+  fs.writeFileSync('./queue-backup.json', JSON.stringify(jsonQueue));
+}, 30000);
