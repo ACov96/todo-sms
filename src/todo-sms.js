@@ -44,8 +44,6 @@ const library = {
   '+': (args, num) => {
     if (!args) return 'Nothing to add.';
     const cur = queue[num];
-    console.log(queue, queue[num])
-    console.log(cur);
     args.split(',').forEach(arg => cur.list.add(arg.trim()));
     return `Added ${args} to the queue.`;
   },
